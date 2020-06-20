@@ -41,19 +41,22 @@ public class TextHighliter {
     }
 
     public void showPrevious() {
-        current = (current == 0) ? startIndexes.size() - 1 : --current;
-        showMatch();
+        if (startIndexes.size() > 0) {
+            current = (current == 0) ? startIndexes.size() - 1 : --current;
+            showMatch();
+        }
     }
 
     public void showNext() {
-        current = (current == startIndexes.size() - 1) ? 0 : ++current;
-        showMatch();
+        if (startIndexes.size() > 0) {
+            current = (current == startIndexes.size() - 1) ? 0 : ++current;
+            showMatch();
+        }
     }
 
     private void showMatch() {
         int start = startIndexes.get(current);
         int end = endIndexes.get(current);
-        System.out.println(start + " " + end);
         textEditor.getTextArea().setCaretPosition(end);
         textEditor.getTextArea().select(start, end);
         textEditor.getTextArea().grabFocus();

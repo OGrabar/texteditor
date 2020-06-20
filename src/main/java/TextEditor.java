@@ -4,10 +4,8 @@ import java.awt.*;
 import java.io.*;
 
 public class TextEditor extends JFrame {
-    private static final int WIDTH = 640;
+    private static final int WIDTH = 800;
     private static final int HEIGHT = 400;
-    private static final int BUTTON_WIDTH = 40;
-    private static final int BUTTON_HEIGHT = 40;
 
     private static final String SAVE_BUTTON_ICON = "./resources/icons/saveButtonIcon.png";
     private static final String OPEN_BUTTON_ICON = "./resources/icons/openButtonIcon.png";
@@ -15,6 +13,9 @@ public class TextEditor extends JFrame {
     private static final String PREVIOUS_MATCH_BUTTON_ICON = "./resources/icons/previousMatchButtonIcon.png";
     private static final String NEXT_MATCH_BUTTON_ICON = "./resources/icons/nextMatchButtonIcon.png";
 
+    private static final String SEARCH_NOT_STARTED = "You should click search button";
+    private static final String SEARCH_FIELD_TOOLTIP = "Search";
+    private static final int SEARCH_FIELD_COLUMNS = 35;
 
     private JPanel topPanel;
     private JTextField searchField;
@@ -63,23 +64,17 @@ public class TextEditor extends JFrame {
     }
 
     private void initTopPanel() {
-        ClassLoader classLoader = this.getClass().getClassLoader();
         topPanel = new JPanel();
-        searchField = new JTextField(30);
-        saveButton = new JButton("Save");
-        saveButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        searchField = new JTextField(SEARCH_FIELD_COLUMNS);
+        saveButton = new JButton();
         saveButton.setIcon(new ImageIcon(SAVE_BUTTON_ICON));
-        openButton = new JButton("Open");
-        openButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        openButton = new JButton();
         openButton.setIcon(new ImageIcon(OPEN_BUTTON_ICON));
-        startSearchButton = new JButton("Search");
-        startSearchButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        startSearchButton = new JButton();
         startSearchButton.setIcon(new ImageIcon(START_SEARCH_BUTTON_ICON));
-        previousMatchButton = new JButton("Prev");
-        previousMatchButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        previousMatchButton = new JButton();
         previousMatchButton.setIcon(new ImageIcon(PREVIOUS_MATCH_BUTTON_ICON));
-        nextMatchButton = new JButton("Next");
-        nextMatchButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        nextMatchButton = new JButton();
         nextMatchButton.setIcon(new ImageIcon(NEXT_MATCH_BUTTON_ICON));
         useRegExCheckbox = new JCheckBox("Use regex");
         fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
@@ -166,11 +161,19 @@ public class TextEditor extends JFrame {
         });
 
         previousMatchButton.addActionListener(actionEvent -> {
-            textHighliter.showPrevious();
+            if (textHighliter != null) {
+                textHighliter.showPrevious();
+            } else {
+                JOptionPane.showMessageDialog(this, SEARCH_NOT_STARTED);
+            }
         });
 
         nextMatchButton.addActionListener(actionEvent -> {
-            textHighliter.showNext();
+            if (textHighliter != null) {
+                textHighliter.showNext();
+            } else {
+                JOptionPane.showMessageDialog(this, SEARCH_NOT_STARTED);
+            }
         });
         useRegExCheckbox.addChangeListener(changeEvent -> {
             useRegExp = !useRegExp;
@@ -202,9 +205,7 @@ public class TextEditor extends JFrame {
         previousMatchButton.setName("PreviousMatchButton");
         nextMatchButton.setName("NextMatchButton");
         useRegExCheckbox.setName("UseRegExCheckbox");
-
         fileChooser.setName("FileChooser");
-
         menuFile.setName("MenuFile");
         menuOpen.setName("MenuOpen");
         menuSave.setName("MenuSave");
